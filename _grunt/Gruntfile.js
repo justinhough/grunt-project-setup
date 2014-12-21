@@ -1,3 +1,6 @@
+/*jslint node: true */
+"use strict";
+
 module.exports = function(grunt) {
   
   var cwd = process.cwd();
@@ -19,7 +22,6 @@ module.exports = function(grunt) {
       source: 'src',
       // <%= folders.build %>
       build: 'dist',
-      //
       // Centurion path
       // <%= folders.centurion %>
       centurion: '_grunt/node_modules/centurion-framework/lib/sass/'
@@ -117,6 +119,7 @@ module.exports = function(grunt) {
         boss: true,
         eqnull: true,
         globals: {
+          browser: true,
           window: false,
           location: false,
           "$": false,
@@ -124,7 +127,7 @@ module.exports = function(grunt) {
         }
       },
       gruntfile: {
-        src: 'Gruntfile.js'
+        src: '_grunt/Gruntfile.js'
       },
       lib_test: {
         src: [
@@ -169,31 +172,29 @@ module.exports = function(grunt) {
     watch: {
       options: {
         cliArgs: ['--gruntfile', require('path').join(cwd, 'Gruntfile.js')],
+        livereload: true,
       },
       gruntfile: {
         files: '<%= jshint.gruntfile.src %>',
-        tasks: ['jshint:gruntfile']
+        tasks: ['jshint:gruntfile'],
       },
       html: {
         files: ['<%= folders.source %>/**/*.html'],
-        tasks: ['copy', 'html']
+        tasks: ['copy', 'html'],
       },
-      lib_test: {
+      javascript: {
         files: '<%= jshint.lib_test.src %>',
-        tasks: ['jshint:lib_test', 'concat', 'uglify']
+        tasks: ['jshint:lib_test', 'concat', 'uglify'],
       },
       sass: {
         files: ['<%= folders.source %>/sass/*.scss'],
-        tasks: ['sass:expanded']
+        tasks: ['sass:expanded'],
       },
     },
-    
-
     
   });
 
   require('load-grunt-tasks')(grunt);
-
   grunt.file.setBase('../');
   
   // Default Task
