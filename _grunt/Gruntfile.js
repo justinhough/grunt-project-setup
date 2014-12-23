@@ -120,10 +120,11 @@ module.exports = function(grunt) {
         eqnull: true,
         globals: {
           browser: true,
-          window: false,
-          location: false,
-          "$": false,
-          "jQuery": false
+          document: true,
+          window: true,
+          location: true,
+          "$": true,
+          "jQuery": true
         }
       },
       gruntfile: {
