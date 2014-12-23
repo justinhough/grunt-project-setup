@@ -138,14 +138,17 @@ module.exports = function(grunt) {
       }
     },
     
-    copy: {
-      dist: {
-        files: [
-          {expand: true, cwd: '<%= folders.source %>/img', src: ['**'], dest: '<%= folders.build %>/img'},
-        ]
+    imagemin: {
+      recursive: {
+        files: [{
+          expand: true,
+          cwd: '<%= jshint.gruntfile.src %>/',
+          src: ['**/*.{png,jpg,gif,ico}'],
+          dest: '<%= jshint.gruntfile.build %>/'
+        }]
       }
     },
-    
+        
     processhtml: {
       dist: {
         options: {
