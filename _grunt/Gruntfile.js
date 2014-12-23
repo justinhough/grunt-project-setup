@@ -18,13 +18,11 @@ module.exports = function(grunt) {
       '================================================== */',
     
     folders: {
-      // <%= folders.source %>
-      source: 'src',
-      // <%= folders.build %>
-      build: 'dist',
-      // Centurion path
-      // <%= folders.centurion %>
-      centurion: '_grunt/node_modules/centurion-framework/lib/sass/'
+      source: 'src', // <%= folders.source %>
+      build: 'dist', // <%= folders.build %>
+      centurion: '_grunt/node_modules/centurion-framework/lib/sass/', // Centurion Framework - <%= folders.centurion %>
+      'stg-server-path': '/var/www/site', // <%= folders.stg-server-path %>
+      'prod-server-path': '/var/www/site', // <%= folders.prod-server-path %>
     },
     
     // Task configuration.
@@ -184,7 +182,7 @@ module.exports = function(grunt) {
       },
       html: {
         files: ['<%= folders.source %>/**/*.html'],
-        tasks: ['copy', 'html'],
+        tasks: ['html'],
       },
       javascript: {
         files: '<%= jshint.lib_test.src %>',
@@ -194,6 +192,41 @@ module.exports = function(grunt) {
         files: ['<%= folders.source %>/sass/*.scss'],
         tasks: ['sass:expanded'],
       },
+      images: {
+      	files: ['<%= jshint.gruntfile.src %>/**/*.{png,jpg,gif,ico}'],
+      	tasks: ['imagemin']
+      },
+    },
+    
+    'gh-pages': {
+      options: {
+        base: '<%= jshint.gruntfile.build %>'
+      },
+      src: '**/*'
+    },
+    
+    rsync: {
+      options: {
+        args: ["--verbose"],
+        exclude: [".git*","*.scss","node_modules"],
+        recursive: true
+      },
+      staging: {
+        options: {
+          src: "<%= jshint.gruntfile.build %>/",
+          dest: "<%= folders.prod-server-path %>",
+          host: "user@staging-host",
+          //delete: true // Careful this option could cause data loss, read the docs!
+        }
+      },
+      production: {
+        options: {
+          src: "<%= jshint.gruntfile.build %>/",
+          dest: "<%= folders.prod-server-path %>",
+          host: "user@live-host",
+          //delete: true // Careful this option could cause data loss, read the docs!
+        }
+      }
     },
     
   });
@@ -204,17 +237,20 @@ module.exports = function(grunt) {
   // Default Task
   grunt.registerTask('default', ['html', 'build', 'serve', 'open', 'watch']);
   
+  // Build code
+  grunt.registerTask('build', ['imagemin', 'sass', 'jshint', 'concat', 'uglify']);
+  
   // Generate HTML
   grunt.registerTask('html', ['processhtml:dist']);
   
-  // Create local server
+  // Create local server (displays "build" folder)
   grunt.registerTask('serve', ['connect']);
   
-  // Minify code
-  //grunt.registerTask('build-minify', ['sass:minify', 'jshint', 'concat', 'uglify']);
+  // Deploy to Server
+  grunt.registerTask('stg-deploy', ['rsync:staging']);
+  grunt.registerTask('prod-deploy', ['rsync:production']);
   
-  // Build code
-  grunt.registerTask('build', ['copy', 'sass', 'jshint', 'concat', 'uglify']);
-
+  // Github Pages
+  grunt.registerTask('gh-pages', ['gh-pages']);
 
 };
