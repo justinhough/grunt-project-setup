@@ -1,0 +1,7 @@
+name: Grunt Project Setup
+description: Grunt can be used to create beautiful projects
+keywords: gulp, jekyll, site
+
+source: source
+destination: dist
+exclude: [jekyll.sh, README.md, Gemfile.lock, Gemfile, node_modules, sass, js]
