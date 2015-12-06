@@ -1,0 +1,21 @@
+@import "centurion-framework";
+
+@include normalize;
+@include column-grid;
+@include clearfix;
+
+header {
+  background-color: lightblue;
+}
+
+footer {
+  background-color: #333;
+  padding: 1rem 0;
+  p {
+    color: white;
+    font-size: 0.8rem;
+  }
+  a {
+    color: white;
+  }
+}
